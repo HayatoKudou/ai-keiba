@@ -1,5 +1,5 @@
 {
-  "name": "api",
+  "name": "@ai-keiba/api",
   "type": "module",
   "scripts": {
     "dev": "wrangler dev",
