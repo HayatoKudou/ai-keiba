@@ -31,4 +31,4 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           workingDirectory: 'apps/api'
           preCommands: |
-            npx wrangler d1 migrations apply keiba-db --remote --yes
+            echo "yes" | npx wrangler d1 migrations apply keiba-db --remote     
