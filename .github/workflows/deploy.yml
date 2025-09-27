@@ -29,6 +29,11 @@ jobs:
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           workingDirectory: 'apps/api'
           preCommands: |
+            echo "Checking migration status..."
+            npx wrangler d1 migrations list keiba-db --remote || true
+            echo "Applying migrations..."
             npx wrangler d1 migrations apply keiba-db --remote
+          command: deploy --minify
