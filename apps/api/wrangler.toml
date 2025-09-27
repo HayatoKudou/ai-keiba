@@ -6,3 +6,6 @@ compatibility_date = "2025-09-23"
 binding = "keiba_db"
 database_name = "keiba-db"
 database_id = "edad6a04-6653-4a79-818e-0821d353eb2a"
+
+[observability.logs]
+enabled = true
