@@ -25,10 +25,26 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Deploy API with migrations
+      - name: Apply D1 migrations (remote)
+        id: d1_migrate
         uses: cloudflare/wrangler-action@v3
         with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          apiToken:  ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           workingDirectory: 'apps/api'
-          command: npx wrangler d1 migrations apply keiba-db --remote
+          command: d1 migrations apply keiba-db --remote
+        env:
+          WRANGLER_LOG: debug              # 詳細ログ
+        continue-on-error: true            # いったん失敗を続行してログを回収
+
+      # Wrangler の内部ログを出力
+      - name: Show wrangler logs
+        if: steps.d1_migrate.outcome != 'success'
+        run: |
+          ls -lah ~/.wrangler/logs || true
+          tail -n +1 ~/.wrangler/logs/* || true
+
+      # 失敗として終了させる
+      - name: Fail if migration failed
+        if: steps.d1_migrate.outcome != 'success'
+        run: exit 1
