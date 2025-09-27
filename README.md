@@ -7,22 +7,19 @@ SvelteKit + Hono + Cloudflare で構築する競馬予想システム
 - **Frontend**: SvelteKit (Cloudflare Pages)
 - **Backend**: Hono (Cloudflare Workers)
 - **Database**: Cloudflare D1
-- **Package Manager**: pnpm (モノレポ構成)
 
 ## プロジェクト構成
 
 ```
 ai-keiba/
-├── apps/
-│   ├── web/        # SvelteKit フロントエンド
-│   └── api/        # Hono API サーバー
-└── packages/       # 共有パッケージ（今後追加予定）
+└── apps/
+    ├── web/        # SvelteKit フロントエンド
+    └── api/        # Hono API サーバー
 ```
 
 ## セットアップ
 
 ### インストール
-
 
 ```bash
 # node 環境の構築
@@ -34,6 +31,10 @@ npm install -g pnpm@$(node -p "require('./package.json').engines.pnpm")
 # 依存性のインストール
 pnpm i
 ```
+
+### データベースセットアップ
+
+TODO
 
 ## 開発
 
@@ -48,12 +49,8 @@ pnpm dev
 
 ### Frontend (Cloudflare Pages)
 
-TODO
+mainブランチにマージ
 
 ### API (Cloudflare Workers)
-
-TODO
-
-## D1 データベースセットアップ
 
 TODO
