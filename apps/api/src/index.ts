@@ -14,6 +14,7 @@ const app = new Hono<{ Bindings: Bindings }>()
 
 app.use('/*', cors({
   origin: (origin, c) => {
+    console.info(c.env.ALLOWED_ORIGINS)
     const allowedOrigins = c.env.ALLOWED_ORIGINS.split(',').map((o: string) => o.trim())
 
     return allowedOrigins.includes(origin) ? origin : null
