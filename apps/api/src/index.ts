@@ -7,12 +7,17 @@ import { raceAnalysisPrompt, raceAnalysisJsonSchema } from './ai-schemas'
 type Bindings = {
   keiba_db: D1Database
   OPENAI_API_KEY: string
+  ALLOWED_ORIGINS: string
 }
 
 const app = new Hono<{ Bindings: Bindings }>()
 
 app.use('/*', cors({
-  origin: ['*'],
+  origin: (origin, c) => {
+    const allowedOrigins = c.env.ALLOWED_ORIGINS.split(',').map((o: string) => o.trim())
+
+    return allowedOrigins.includes(origin) ? origin : null
+  },
   credentials: true,
 }));
 
