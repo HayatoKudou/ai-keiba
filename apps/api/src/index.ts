@@ -12,11 +12,23 @@ type Bindings = {
 
 const app = new Hono<{ Bindings: Bindings }>()
 
-// まず固定値でテスト
-app.use('/*', cors({
-  origin: 'https://ai-keiba.pages.dev',
-  credentials: true,
-}));
+// 手動でCORSヘッダーを設定
+app.use('*', async (c, next) => {
+  // プリフライトリクエストへの対応
+  if (c.req.method === 'OPTIONS') {
+    c.header('Access-Control-Allow-Origin', 'https://ai-keiba.pages.dev');
+    c.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    c.header('Access-Control-Allow-Headers', 'Content-Type');
+    c.header('Access-Control-Allow-Credentials', 'true');
+    return c.text('', 204);
+  }
+
+  // 通常のリクエストへのCORSヘッダー設定
+  c.header('Access-Control-Allow-Origin', 'https://ai-keiba.pages.dev');
+  c.header('Access-Control-Allow-Credentials', 'true');
+
+  await next();
+});
 
 app.get('/api/races', async (c) => {
   const { results } = await c.env.keiba_db
