@@ -12,14 +12,11 @@ type Bindings = {
 
 const app = new Hono<{ Bindings: Bindings }>()
 
-app.use('/*', (c, next) => {
-  const allowedOrigins = c.env.ALLOWED_ORIGINS.split(',').map((o: string) => o.trim())
-
-  return cors({
-    origin: allowedOrigins,
-    credentials: true,
-  })(c, next)
-});
+// まず固定値でテスト
+app.use('/*', cors({
+  origin: 'https://ai-keiba.pages.dev',
+  credentials: true,
+}));
 
 app.get('/api/races', async (c) => {
   const { results } = await c.env.keiba_db
