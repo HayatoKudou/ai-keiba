@@ -1,11 +1,12 @@
 <script lang="ts">
   import type { PageData } from './$types';
-  
+  import { PUBLIC_API_URL } from '$env/static/public';
+
   const props = $props<{ data: PageData }>();
   const { data } = props;
 
 const handleAnalysis = () => {
-    fetch('http://localhost:8787/api/race-analysis', {
+    fetch(`${PUBLIC_API_URL}/api/race-analysis`, {
       method: 'POST',
       body: JSON.stringify({ raceName: 'スプリンターズＳ' })
     })
