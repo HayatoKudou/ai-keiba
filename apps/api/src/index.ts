@@ -12,9 +12,12 @@ type Bindings = {
 
 const app = new Hono<{ Bindings: Bindings }>()
 
-// CORSを全許可に設定（一時的）
-app.use('*', cors({
-  origin: '*',
+app.use('/*', cors({
+  origin: (origin, c) => {
+    const allowedOrigins = c.env.ALLOWED_ORIGINS.split(',').map((o: string) => o.trim())
+    return allowedOrigins.includes(origin) ? origin : allowedOrigins[0]
+  },
+  allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   credentials: true,
 }));
 
