@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "pnpm -r --parallel dev",
     "build": "pnpm -r build",
-    "preview": "pnpm -r preview"
+    "preview": "pnpm -r preview",
+    "format": "pnpm -r format"
   },
   "devDependencies": {
     "typescript": "^5.3.3"

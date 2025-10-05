@@ -30,15 +30,24 @@ const app = new Hono<{ Bindings: Bindings }>()
   });
 })
 .post('/api/scrape-races', async (c) => {
-  const scraper = new JraScraperService()
-  const testUrl = 'https://www.jra.go.jp/JRADB/accessD.html?CNAME=pw01dde0108202503010120251004/A6'
+  try {
+    const scraper = new JraScraperService()
+    const url = 'https://race.netkeiba.com/top/'
 
-  const scrapedData = await scraper.scrapeRaceData(testUrl)
+    const scrapedData = await scraper.scrapeDailyRaces(url)
 
-  return c.json({
-    success: true,
-    data: scrapedData
-  })
+    return c.json({
+      success: true,
+      data: scrapedData
+    })
+
+  } catch (error) {
+    console.error('Scraping error:', error)
+    return c.json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error'
+    }, 500)
+  }
 })
 .post('/api/race-analysis', async (c) => {
   const { raceName } = await c.req.json();
