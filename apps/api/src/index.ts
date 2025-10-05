@@ -3,6 +3,7 @@ import { cors } from 'hono/cors'
 import { D1Database } from '@cloudflare/workers-types'
 import OpenAI from 'openai'
 import { raceAnalysisPrompt, raceAnalysisJsonSchema } from './ai-schemas'
+import { JraScraperService } from './services/jra-scraper.service'
 
 type Bindings = {
   keiba_db: D1Database
@@ -11,17 +12,15 @@ type Bindings = {
 }
 
 const app = new Hono<{ Bindings: Bindings }>()
-
-app.use('/*', cors({
+.use('/*', cors({
   origin: (origin, c) => {
     const allowedOrigins = c.env.ALLOWED_ORIGINS.split(',').map((o: string) => o.trim())
 
     return allowedOrigins.includes(origin) ? origin : null
   },
   credentials: true,
-}));
-
-app.get('/api/races', async (c) => {
+}))
+.get('/api/races', async (c) => {
   const { results } = await c.env.keiba_db
   .prepare('SELECT * FROM races')
   .all();
@@ -29,9 +28,19 @@ app.get('/api/races', async (c) => {
   return c.json({
     races: results
   });
-});
+})
+.post('/api/scrape-races', async (c) => {
+  const scraper = new JraScraperService()
+  const testUrl = 'https://www.jra.go.jp/JRADB/accessD.html?CNAME=pw01dde0108202503010120251004/A6'
 
-app.post('/api/race-analysis', async (c) => {
+  const scrapedData = await scraper.scrapeRaceData(testUrl)
+
+  return c.json({
+    success: true,
+    data: scrapedData
+  })
+})
+.post('/api/race-analysis', async (c) => {
   const { raceName } = await c.req.json();
   
   const openai = new OpenAI({

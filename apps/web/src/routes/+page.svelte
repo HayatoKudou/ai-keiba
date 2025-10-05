@@ -6,13 +6,21 @@
   const { data } = props;
 
 const handleAnalysis = () => {
-    fetch(`${PUBLIC_API_URL}/api/race-analysis`, {
-      method: 'POST',
-      body: JSON.stringify({ raceName: 'スプリンターズＳ' })
-    })
-    .then(response => response.json())
-    .then(data => console.log('AI Response:', data));
-  }
+  fetch(`${PUBLIC_API_URL}/api/race-analysis`, {
+    method: 'POST',
+    body: JSON.stringify({ raceName: 'スプリンターズＳ' })
+  })
+  .then(response => response.json())
+  .then(data => console.log('AI Response:', data));
+}
+
+const handleScrape = () => {
+  fetch(`${PUBLIC_API_URL}/api/scrape-races`, {
+    method: 'POST'
+  })
+  .then(response => response.json())
+  .then(data => console.log('Scrape Response:', data));
+}
 
 </script>
 
@@ -26,6 +34,6 @@ const handleAnalysis = () => {
     </div>
 {/each}
 
-<button onclick={handleAnalysis}>
+<button onclick={handleScrape}>
     分析
 </button>
